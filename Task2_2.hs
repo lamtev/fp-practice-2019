@@ -12,10 +12,12 @@ import Prelude hiding (foldl, foldr, unfoldr, map, concatMap,
     filter, maxBy, minBy, reverse, sum, product, elem)
 
 foldl :: (b -> a -> b) -> b -> [a] -> b
-foldl = todo
+foldl _ z []     = z
+foldl f z (x:xs) = foldl f (f z x) xs
 
 foldr :: (a -> b -> b) -> b -> [a] -> b
-foldr = todo
+foldr _ z []     = z
+foldr f z (x:xs) = f x (foldr f z xs)
 
 unfoldr :: (b -> Maybe (a, b)) -> b -> [a]
 unfoldr = todo
@@ -30,11 +32,11 @@ reverse lst = foldl f [] lst where f t h = h:t
 
 -- Отображение элементов списка
 map :: (a -> b) -> [a] -> [b]
-map = todo
+map f = foldr helper [] where helper x acc = f x : acc
 
 -- Произведение всех элементов списка
 product :: [Integer] -> Integer
-product = todo
+product = foldr (*) 1
 
 -- Выделение из списка Maybe всех существующих значений
 catMaybes :: [Maybe a] -> [a]
@@ -50,7 +52,7 @@ filterNot = todo
 
 -- Поиск элемента в списке
 elem :: (Eq a) => a -> [a] -> Bool
-elem = todo
+elem y = foldl f False where f b x = if b || x == y then True else False
 
 -- Список чисел в диапазоне [from, to) с шагом step
 rangeTo :: Integer -> Integer -> Integer -> [Integer]
@@ -58,7 +60,7 @@ rangeTo from to step = todo
 
 -- Конкатенация двух списков
 append :: [a] -> [a] -> [a]
-append = todo
+append = foldr (:)
 
 -- Разбиение списка lst на куски размером n
 -- (последний кусок может быть меньше)
