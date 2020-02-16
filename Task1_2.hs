@@ -15,6 +15,10 @@ gcd x 0 = x
 gcd 0 y = y
 gcd x y = last [n | n <- [1..min x y], x `mod` n == 0, y `mod` n == 0]
 
+gcd' :: Integer -> Integer -> Integer
+gcd' x 0 = x
+gcd' x y = gcd y $ x `mod` y
+
 -- существует ли полный целочисленный квадрат в диапазоне [from, to)?
 doesSquareBetweenExist :: Integer -> Integer -> Bool
 doesSquareBetweenExist from to = not $ null [n | n <- [from..to - 1], (fromIntegral $ round $ sqrt $ fromIntegral n) == (sqrt $ fromIntegral n)]
