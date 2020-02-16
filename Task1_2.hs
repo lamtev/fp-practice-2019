@@ -34,6 +34,17 @@ isPrime :: Integer -> Bool
 isPrime x | x < 2 = False
 isPrime x         = null [n | n <- [2..round $ sqrt $ fromIntegral x], x `mod` n == 0]
 
+-- является ли дата корректной с учётом количества дней в месяце и
+-- вискокосных годов?
+isDateCorrect :: Integer -> Integer -> Integer -> Bool
+-- будем считать отрицательный год до н.э.
+isDateCorrect day month _    | day <= 0 || month <= 0             = False
+isDateCorrect day month year | elem month [1, 3, 5, 7, 8, 10, 12] = day <= 31
+                             | month == 2                         = if isLeap year then day <= 29 else day <= 28
+                             | otherwise                          = day <= 30
+                                 where isLeap y = y `mod` 400 == 0 || y `mod` 4 == 0 && y `mod` 100 /= 0
+
+
 -- TODO отложим до лучших времен :(
 
 -- синус числа (формула Тейлора)
@@ -43,11 +54,6 @@ sin x = todo
 -- косинус числа (формула Тейлора)
 cos :: Double -> Double
 cos x = todo
-
--- является ли дата корректной с учётом количества дней в месяце и
--- вискокосных годов?
-isDateCorrect :: Integer -> Integer -> Integer -> Bool
-isDateCorrect day month year = todo
 
 type Point2D = (Double, Double)
 
