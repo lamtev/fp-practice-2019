@@ -6,8 +6,8 @@ module Task2_1 where
   бинарного дерева поиска (без балансировки) и все операции, приведённые в данном файле
 -}
 
-import Todo(todo)
 
+import Data.List (sort)
 import Prelude hiding (lookup)
 
 -- Ассоциативный массив на основе бинарного дерева поиска
@@ -54,8 +54,20 @@ remove k (Node tk v l r) | k == tk   = helper l r
                                                   (_, _)                 -> Node (key l) (value l) (lch l) (helper (rch l) r)
 
 -- Поиск ближайшего снизу ключа относительно заданного
-nearestLE :: Integer -> TreeMap v -> (Integer, v)
-nearestLE i t = todo
+nearestLE :: Integer -> TreeMap v -> Maybe (Integer, v)
+nearestLE _ EmptyTree = Nothing
+nearestLE k (Node tk v l r) | k == tk = Just (k, v)
+                            | k < tk  = nearestLE k l
+                            | k > tk  = less
+                                          where less = case nearestLE k r of
+                                                              Nothing -> Just (tk, v)
+                                                              it@_    -> it
+
+-- Тест
+list = [(1, 0), (30, 0), (2, 0), (50, 0), (4, 0), (70, 0), (6, 0), (8, 0)]
+tree = treeFromList list
+nearestLETest1 = if nearestLE (-1) tree /= Nothing then error "assertion failed" else True
+nearestLETest2 = if nearestLE 69 tree /= Just (50, 0) then error "assertion failed" else True
 
 -- Построение дерева из списка пар
 treeFromList :: [(Integer, v)] -> TreeMap v
@@ -66,6 +78,19 @@ listFromTree :: TreeMap v -> [(Integer, v)]
 listFromTree EmptyTree = []
 listFromTree (Node k v l r) = listFromTree l ++ [(k, v)] ++ listFromTree r
 
+-- Тест
+listFromTreeAndTreeFromListTest = if (sort list) /= (listFromTree (treeFromList list)) then error "assertion failed" else True
+
 -- Поиск k-той порядковой статистики дерева
-kMean :: Integer -> TreeMap v -> (Integer, v)
-kMean i t = todo
+kMean :: Integer -> TreeMap v -> Maybe (Integer, v)
+kMean i EmptyTree = Nothing
+kMean i (Node k v l r) | lCount == i = Just (k, v)
+                       | lCount > i  = kMean i l
+                       | otherwise   = kMean (i - lCount - 1) r
+                          where lCount = count l
+                                count tree = case tree of
+                                         EmptyTree    -> 0
+                                         Node _ _ l r -> 1 + count l + count r
+
+-- Тест
+kMeanTest = if Just (listFromTree tree !! 5) /= kMean 5 tree then error "assertion failed" else True
