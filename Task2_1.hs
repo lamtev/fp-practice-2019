@@ -38,8 +38,8 @@ lookup k (Node tk v l r) | k == tk   = Just v
 insert :: (Integer, v) -> TreeMap v -> TreeMap v
 insert (k, v) EmptyTree                    = Node k v EmptyTree EmptyTree
 insert (k, v) (Node tk tv l r) | k == tk   = Node k v l r
-                               | k < tk    = Node k v (insert (k, v) l) r
-                               | otherwise = Node k v l (insert (k, v) r)
+                               | k < tk    = Node tk tv (insert (k, v) l) r
+                               | otherwise = Node tk tv l (insert (k, v) r)
 
 -- Удаление элемента по ключу
 remove :: Integer -> TreeMap v -> TreeMap v
