@@ -37,6 +37,20 @@ instance Semigroup (PSetLogicalDifference a) where
 instance Monoid (PSetLogicalDifference a) where
   mempty = PSetLogicalDifference (\_ -> False)
 
+inFirstRange  x = x `elem` [1..5]
+inSecondRange x = x `elem` [3..7]
+fullRange = [1..7]
+
+set1 = (PSetUnion             inFirstRange) `mappend` (PSetUnion             inSecondRange)
+set2 = (PSetIntersection      inFirstRange) `mappend` (PSetIntersection      inSecondRange)
+set3 = (PSetLogicalDifference inFirstRange) `mappend` (PSetLogicalDifference inSecondRange)
+
+unionTest = if [e | e <- fullRange, set1 `ucontains` e] /= fullRange then error "assertion failed" else True
+
+intersectionTest = if [e | e <- fullRange, set2 `icontains` e] /= [3..5] then error "assertion failed" else True
+
+logicalDifferenceTest = if [e | e <- fullRange, set3 `ldcontains` e] /= [1,2,6,7] then error "assertion failed" else True
+
 -- Monoid по вычитанию множеств
 -- Вычитание - некоммутативная операция => моноид никак не построить
 
