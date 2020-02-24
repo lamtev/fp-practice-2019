@@ -21,7 +21,7 @@ instance Applicative FunMonad where
   pure x = FunMonad (\_ -> x)
 
   -- Последовательное применение, похоже на оператор ($), но в отличие от ($),
-  -- (<*>) работает не с "сырыми", а со значениями, упакованными в контейнер.
+  -- (<*>) работает не с "сырыми" значениями, а со значениями, упакованными в контейнер.
   -- (<*>) :: (FunMonad ((String -> a) -> b)) -> (FunMonad (String -> a)) -> (FunMonad (String -> b))
   (<*>) (FunMonad fm1) (FunMonad fm2) = FunMonad (\s -> fm1 s (fm2 s))
 
